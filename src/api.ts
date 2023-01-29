@@ -9,14 +9,12 @@ interface IMovie {
   overview: string;
 }
 export interface IGetMoviesResult {
-  dates: {
     maximum: string;
     minimum: string;
     page: number;
-    result: IMovie[];
+    results: IMovie[];
     total_pages: number;
     total_result: number;
-  };
 }
 
 export function getMovies() {
