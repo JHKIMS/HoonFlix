@@ -109,9 +109,18 @@ const infoVariants = {
   },
 };
 
+const Overlay = styled(motion.div)`
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  opacity: 0;
+`
+
 function Home() {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{movieId:string}>("/movies/:movieId");
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { data, isLoading } = useQuery<IGetMoviesResult>(
     ["movies", "nowPlaying"],
     getMovies
@@ -133,6 +142,7 @@ function Home() {
   const onBoxClicked = (movieId: number) => {
     history.push(`/movies/${movieId}`);
   };
+  const onOverlayClicked = () => history.push(`/`);
   return (
     <Wrapper>
       {isLoading ? (
@@ -161,7 +171,7 @@ function Home() {
                   .slice(offSet * index, offSet * index + offSet)
                   .map((movie) => (
                     <Box
-                      layoutId={movie.id+""}
+                      layoutId={movie.id + ""}
                       key={movie.id}
                       whileHover="hover"
                       initial="normal"
@@ -180,19 +190,22 @@ function Home() {
           </Slider>
           <AnimatePresence>
             {bigMovieMatch ? (
-              <motion.div
-              layoutId={bigMovieMatch.params.movieId+""}
-                style={{
-                  position: "absolute",
-                  width: "40vw",
-                  height: "80vh",
-                  backgroundColor: "red",
-                  top: 50,
-                  left: 0,
-                  right: 0,
-                  margin: "0 auto",
-                }}
-              />
+              <>
+              <Overlay onClick={onOverlayClicked} animate={{opacity: 1}}></Overlay>
+                <motion.div
+                  layoutId={bigMovieMatch.params.movieId + ""}
+                  style={{
+                    position: "absolute",
+                    width: "40vw",
+                    height: "80vh",
+                    backgroundColor: "red",
+                    top: 50,
+                    left: 0,
+                    right: 0,
+                    margin: "0 auto",
+                  }}
+                />
+              </>
             ) : null}
           </AnimatePresence>
         </>
