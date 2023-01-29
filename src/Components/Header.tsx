@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
@@ -68,7 +68,14 @@ const Circle = styled(motion.span)`
 const Input = styled(motion.input)`
   transform-origin: right center;
   position: absolute;
-  left: -150px;
+  right: 0px;
+  padding: 5px 10px;
+  padding-left: 40px;
+  z-index: -1;
+  color: white;
+  font-size: 16px;
+  background-color: transparent;
+  border: 1px solid ${(props) => props.theme.white.lighter};
 `;
 
 const logoVariant = {
@@ -88,7 +95,19 @@ function Header() {
   const tvMatch = useRouteMatch("/tv");
 
   const [searchOpen, setSearchOpen] = useState(false);
-  const toggleSearch = () => setSearchOpen((prev) => !prev);
+  const toggleSearch = () => {
+    if (searchOpen) {
+        inputAnimation.start({
+            scaleX : 0,
+        })
+    } else {
+        inputAnimation.start({
+            scaleX: 1,
+        })
+    }
+    setSearchOpen((prev) => !prev);
+  };
+  const inputAnimation = useAnimation();
   return (
     <Nav>
       <Col>
@@ -119,7 +138,7 @@ function Header() {
           {/* 돋보기 */}
           <motion.svg
             onClick={toggleSearch}
-            animate={{ x: searchOpen ? -180 : 0 }}
+            animate={{ x: searchOpen ? -185 : 0 }}
             transition={{ type: "linear" }}
             fill="currentColor"
             viewBox="0 0 20 20"
@@ -132,9 +151,10 @@ function Header() {
             ></motion.path>
           </motion.svg>
           <Input
+            animate={inputAnimation}
+            initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
-            animate={{ scaleX: searchOpen ? 1 : 0 }}
-            placeholder="movie or tvShow"
+            placeholder="Movie or TvShow"
           />
         </Search>
       </Col>
