@@ -44,13 +44,19 @@ const Row = styled(motion.div)`
   position: absolute;
   width: 100%;
 `;
-const Box = styled(motion.div)<{bgPhoto: string}>`
+const Box = styled(motion.div)<{ bgPhoto: string }>`
   background-color: white;
   background-image: url(${(props) => props.bgPhoto});
   background-size: cover;
   background-position: center center;
   height: 200px;
   font-size: 66px;
+  &:first-child{
+    transform-origin: center left;
+  }
+  &:last-child{
+    transform-origin: center right;
+  }
 `;
 const rowVariants = {
   hidden: { x: window.innerWidth + 5 },
@@ -59,6 +65,21 @@ const rowVariants = {
 };
 
 const offSet = 6;
+
+const boxVariants = {
+  normal: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.3,
+    y: -50,
+    transition: {
+      delay: 0.5,
+      duration: 0.3,
+      type: "tween",
+    },
+  },
+};
 
 function Home() {
   const { data, isLoading } = useQuery<IGetMoviesResult>(
@@ -73,7 +94,7 @@ function Home() {
       toggleLeaving();
       const totalMovies = data.results.length - 1;
       const maxIndex = Math.floor(totalMovies / offSet) - 1;
-      setIndex((prev) => prev === maxIndex ? 0 : prev + 1);
+      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
   const toggleLeaving = () => {
@@ -106,7 +127,14 @@ function Home() {
                   .slice(1)
                   .slice(offSet * index, offSet * index + offSet)
                   .map((movie) => (
-                    <Box key={movie.id} bgPhoto={makeImagePath(movie.backdrop_path, "w500")}/>
+                    <Box
+                      key={movie.id}
+                      whileHover="hover"
+                      initial="normal"
+                      transition={{type:"tween"}}
+                      variants={boxVariants}
+                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                    />
                   ))}
               </Row>
             </AnimatePresence>
