@@ -1,10 +1,8 @@
 import { AnimatePresence, motion, useScroll } from "framer-motion";
-import { relative } from "path";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { moveEmitHelpers } from "typescript";
 import { getMovies, IGetMoviesResult } from "../api";
 import { makeImagePath } from "../utils";
 
