@@ -69,16 +69,17 @@ const ArrowBtn = styled(motion.div)`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 6rem;
-  height: 6rem;
+  width: 3rem;
+  height: 3rem;
   color: #fff;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.5);
-  opacity: 5;
+  opacity: 0.3;
   transition: all 0.3s;
   z-index: 90;
   cursor: pointer;
   &:hover {
+    opacity: 1;
     color: #000;
     background-color: #fff;
   }

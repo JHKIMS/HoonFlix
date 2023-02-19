@@ -29,7 +29,6 @@ export function getMovies() {
   );
 }
 
-
 // 영화-TopRated
 export function getTopMovie() {
   return fetch(`${BASE_PATH}/movie/top_rated?${NATION_PATH}`).then((response) =>
@@ -44,18 +43,26 @@ export function getUpcomingMovies() {
   );
 }
 
-
-
-export interface IGetDataResult{
-  dates?: {
-    maximum: string;
-    minimuk: string;
-  };
-  page: number;
-  results: IMovie[];
-  total_pages: number;
-  total_results: number;
+// TvShows-Popular
+export function getPopTvShows() {
+  return fetch(`${BASE_PATH}/tv/popular?${NATION_PATH}`).then((response) =>
+    response.json()
+  );
 }
+// TvShows-TopRated
+export function getTopTvShows() {
+  return fetch(`${BASE_PATH}/tv/top_rated?${NATION_PATH}`).then((response) =>
+    response.json()
+  );
+}
+// TvShows-AiringToday
+export function getAiringTvShows() {
+  return fetch(`${BASE_PATH}/tv/airing_today?${NATION_PATH}`).then((response) =>
+    response.json()
+  );
+}
+
+
 export const TYPE_VIDEO = [
   "nowPlaying",
   "upcomingMovies",
