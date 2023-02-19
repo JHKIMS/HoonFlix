@@ -27,6 +27,7 @@ const Logo = styled(motion.svg)`
   margin-right: 50px;
   width: 95px;
   height: 25px;
+  border-radius: none;
   fill: ${(props) => props.theme.red};
   path {
     stroke-width: 6px;

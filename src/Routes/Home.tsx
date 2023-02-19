@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { getMovies, IGetMoviesResult } from "../api";
+import { getMovies, getNowPlayingMovie, getPopularMovie, getUpcomingMovie, IGetDataResult, IGetMoviesResult, TYPE_VIDEO } from "../api";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
@@ -45,9 +45,9 @@ const Row = styled(motion.div)`
   position: absolute;
   width: 100%;
 `;
-const Box = styled(motion.div)<{ bgPhoto: string }>`
+const Box = styled(motion.div)<{ $bgPhoto: string }>`
   background-color: white;
-  background-image: url(${(props) => props.bgPhoto});
+  background-image: url(${(props) => props.$bgPhoto});
   background-size: cover;
   background-position: center center;
   height: 200px;
@@ -151,12 +151,29 @@ function Home() {
   const history = useHistory();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { scrollY } = useScroll();
+  
+  // 영화-현재상영작
   const { data, isLoading } = useQuery<IGetMoviesResult>(
-    ["movies", "nowPlaying"],
-    getMovies
+    [TYPE_VIDEO[0], "nowPlayingMovies"],
+    getNowPlayingMovie
   );
+
+  // 영화-개봉예정작
+  const {data: upcomingMoive} = useQuery<IGetMoviesResult>(
+    [TYPE_VIDEO[1], "upcomingMovies"],
+    getUpcomingMovie
+  )
+
+  // 영화-인기영화
+  const { data: popularMovie } = useQuery<IGetDataResult>(
+    [TYPE_VIDEO[2], "popularMovies"],
+    getPopularMovie
+  );
+
+
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
@@ -213,7 +230,7 @@ function Home() {
                       onClick={() => onBoxClicked(movie.id)}
                       transition={{ type: "tween" }}
                       variants={boxVariants}
-                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                      $bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                     >
                       <Info variants={infoVariants}>
                         <h4>{movie.title}</h4>
