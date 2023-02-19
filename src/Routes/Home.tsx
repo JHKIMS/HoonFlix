@@ -3,12 +3,14 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { getMovies, getNowPlayingMovie, getPopularMovie, getUpcomingMovie, IGetDataResult, IGetMoviesResult, TYPE_VIDEO } from "../api";
+import { getMovies, getNowPlayingMovie, getTopMovie, getUpcomingMovies, IGetDataResult, IGetMoviesResult, TYPE_VIDEO } from "../api";
+import Slide from "../Components/Slide";
 import { makeImagePath } from "../utils";
 
 const Wrapper = styled.div`
   background: black;
 `;
+
 const Loader = styled.div`
   height: 20vh;
   display: flex;
@@ -158,19 +160,17 @@ function Home() {
     getNowPlayingMovie
   );
 
-  // 영화-개봉예정작
-  const {data: upcomingMoive} = useQuery<IGetMoviesResult>(
-    [TYPE_VIDEO[1], "upcomingMovies"],
-    getUpcomingMovie
-  )
-
   // 영화-인기영화
-  const { data: popularMovie } = useQuery<IGetDataResult>(
-    [TYPE_VIDEO[2], "popularMovies"],
-    getPopularMovie
+  const { data: topMovie } = useQuery<IGetMoviesResult>(
+    [TYPE_VIDEO[2], "topMovie"],
+    getTopMovie
   );
 
-
+  // 영화-개봉예정
+  const { data: upComingMovie } = useQuery<IGetMoviesResult>(
+    [TYPE_VIDEO[2], "upComingMovie"],
+    getUpcomingMovies
+  );
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
 
@@ -208,38 +208,20 @@ function Home() {
             <Title>{data?.results[0].title}</Title>
             <OverView>{data?.results[0].overview}</OverView>
           </Banner>
-          <Slider>
-            <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
-              <Row
-                variants={rowVariants}
-                key={index}
-                initial="hidden"
-                animate="visible"
-                transition={{ type: "tween", duration: 1 }}
-                exit="exit"
-              >
-                {data?.results
-                  .slice(1)
-                  .slice(offSet * index, offSet * index + offSet)
-                  .map((movie) => (
-                    <Box
-                      layoutId={movie.id + ""}
-                      key={movie.id}
-                      whileHover="hover"
-                      initial="normal"
-                      onClick={() => onBoxClicked(movie.id)}
-                      transition={{ type: "tween" }}
-                      variants={boxVariants}
-                      $bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
-                    >
-                      <Info variants={infoVariants}>
-                        <h4>{movie.title}</h4>
-                      </Info>
-                    </Box>
-                  ))}
-              </Row>
-            </AnimatePresence>
-          </Slider>
+
+          <Slide
+            data={data as IGetMoviesResult}
+            title={"NOW_PLAYING_MOVIE"}
+          />
+          <Slide
+            data={topMovie as IGetMoviesResult}
+            title={"TOP_RATED_MOVIE"}
+          />
+          <Slide
+            data={upComingMovie as IGetMoviesResult}
+            title={"UPCOMING_MOVIE"}
+          />
+
           <AnimatePresence>
             {bigMovieMatch ? (
               <>

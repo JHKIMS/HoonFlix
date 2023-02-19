@@ -29,16 +29,17 @@ export function getMovies() {
   );
 }
 
-// 영화-개봉예정작
-export function getUpcomingMovie() {
-  return fetch(`${BASE_PATH}/movie/upcoming?${NATION_PATH}`).then((response) =>
+
+// 영화-TopRated
+export function getTopMovie() {
+  return fetch(`${BASE_PATH}/movie/top_rated?${NATION_PATH}`).then((response) =>
     response.json()
   );
 }
 
-// 영화-인기영화
-export function getPopularMovie() {
-  return fetch(`${BASE_PATH}/movie/popular?${NATION_PATH}`).then((response) =>
+// 영화-개봉예정영화
+export function getUpcomingMovies() {
+  return fetch(`${BASE_PATH}/movie/upcoming?${NATION_PATH}`).then((response) =>
     response.json()
   );
 }
