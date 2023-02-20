@@ -9,8 +9,10 @@ interface IMovie {
   id: number;
   backdrop_path: string;
   poster_path: string;
-  title: string;
+  name?: string;
+  title?: string;
   overview: string;
+  vote_average: number;
 }
 export interface IGetMoviesResult {
     maximum: string;
@@ -67,7 +69,9 @@ export const TYPE_VIDEO = [
   "nowPlaying",
   "upcomingMovies",
   "popularMovies",
-  "tvShow",
+  "tvAiring",
+  "tvTop",
+  "tvPop",
 ];
 // Movies - NowPlaying
 export function getNowPlayingMovie() {

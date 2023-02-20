@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
-import { getMovies, getNowPlayingMovie, getTopMovie, getUpcomingMovies, IGetMoviesResult, TYPE_VIDEO } from "../api";
+import { getNowPlayingMovie, getTopMovie, getUpcomingMovies, IGetMoviesResult, TYPE_VIDEO } from "../api";
 import Slide from "../Components/Slide";
 import { makeImagePath } from "../utils";
 

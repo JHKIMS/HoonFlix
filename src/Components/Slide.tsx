@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
@@ -15,6 +15,71 @@ interface ISlider {
   videoType: string;
   listType: string;
 }
+
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  opacity: 0;
+`;
+const BigMovie = styled(motion.div)`
+  position: absolute;
+  width: 40vw;
+  height: 80vh;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  background-color: ${(props) => props.theme.black.lighter};
+  border-radius: 15px;
+  overflow: hidden;
+`;
+const BigCover = styled.div`
+  width: 100%;
+  background-size: cover;
+  background-position: center center;
+  height: 400px;
+`;
+const BigTitle = styled.h3`
+  color: ${(props) => props.theme.white.lighter};
+  padding: 10px;
+  font-size: 36px;
+  position: relative;
+  top: -60px;
+`;
+const BigOverView = styled.p`
+  color: ${(props) => props.theme.white.lighter};
+  padding: 20px;
+  position: relative;
+  top: -80px;
+`;
+
+const BigRating = styled.div<{ rating: number }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 100%;
+  min-height: 30px;
+  border-radius: 5px;
+  background-color: ${(props) =>
+    props.rating > 7 ? "#44bd32" : props.rating > 4 ? "#fa8231" : "#eb3b5a"};
+  font-size: 20px;
+  font-weight: 600;
+`;
+
+const BigInfoTitle = styled.h3`
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+`;
+const BigInfoBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
 
 
 const Slider = styled(motion.div)`
@@ -67,7 +132,7 @@ const Box = styled(motion.div)<{ $bgPhoto: string }>`
 `;
 const ArrowBtn = styled(motion.div)`
   position: absolute;
-  top:300%;
+  top: 300%;
   transform: translateY(-50%);
   display: flex;
   justify-content: center;
@@ -146,14 +211,29 @@ const rowVariants = {
   },
 };
 
-export default function Slide({data, title ,menuName, videoType, listType}:ISlider){
-
+export default function Slide({
+  data,
+  title,
+  menuName,
+  videoType,
+  listType,
+}: ISlider) {
   const history = useHistory();
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
-  const [dragMode, setDragMode] = useState(false); 
+  const [dragMode, setDragMode] = useState(false);
   const offset = useRecoilValue(slideCnt);
   const [isRight, setIsRight] = useState(1);
+  const { scrollY } = useScroll();
+
+  const bigModalmatch = useRouteMatch<{ id: string }>(
+    `/${menuName}/${listType}/:id`
+  );
+
+  const onOverlayClicked = () => history.push(`/`);
+  const clickedMovie =
+    bigModalmatch?.params.id &&
+    data?.results.find((movie) => movie.id + "" === bigModalmatch.params.id);
 
   const rowProps = {
     gridcnt: offset,
@@ -166,7 +246,6 @@ export default function Slide({data, title ,menuName, videoType, listType}:ISlid
     key: index,
   };
 
-
   const toggleLeaving = (value: boolean) => {
     setLeaving(value);
     setDragMode(value);
@@ -175,7 +254,6 @@ export default function Slide({data, title ,menuName, videoType, listType}:ISlid
     history.push(`/${menu}/${type}/${id}`);
   };
 
-  
   const changeIndex = (right: number) => {
     if (leaving || dragMode) return;
 
@@ -194,7 +272,6 @@ export default function Slide({data, title ,menuName, videoType, listType}:ISlid
     }
   };
 
-
   const onClickToArrowBtn = (right: number) => {
     if (!leaving && !dragMode) {
       changeIndex(right);
@@ -203,38 +280,78 @@ export default function Slide({data, title ,menuName, videoType, listType}:ISlid
   return (
     <>
       <Slider>
-      <MainTitle>{title}</MainTitle>
-      <LeftBtn onClick={()=> onClickToArrowBtn(-1)}>
-          <AiOutlineLeft/>
-      </LeftBtn>
-      <RightBtn onClick={() => onClickToArrowBtn(1)}>
-        <AiOutlineRight />
-      </RightBtn>
-            <AnimatePresence initial={false} onExitComplete={() => toggleLeaving(false)} custom={isRight}>
-              <Row
-                {...rowProps}
+        <MainTitle>{title}</MainTitle>
+        <LeftBtn onClick={() => onClickToArrowBtn(-1)}>
+          <AiOutlineLeft />
+        </LeftBtn>
+        <RightBtn onClick={() => onClickToArrowBtn(1)}>
+          <AiOutlineRight />
+        </RightBtn>
+        <AnimatePresence
+          initial={false}
+          onExitComplete={() => toggleLeaving(false)}
+          custom={isRight}
+        >
+          <Row {...rowProps}>
+            {data?.results
+              .slice(offSet * index, offSet * index + offSet)
+              .map((d) => (
+                <Box
+                  layoutId={d.id + "" + listType}
+                  key={d.id}
+                  whileHover="hover"
+                  initial="normal"
+                  onClick={() => onBoxClicked(menuName, listType, d.id)}
+                  transition={{ type: "tween" }}
+                  variants={boxVariants}
+                  $bgPhoto={makeImagePath(d.backdrop_path, "w500")}
+                >
+                  <Info variants={infoVariants}>
+                    <h4>{d.title ? d.title : d.name}</h4>
+                  </Info>
+                </Box>
+              ))}
+          </Row>
+        </AnimatePresence>
+
+        <AnimatePresence>
+          {bigModalmatch ? (
+            <>
+              <Overlay
+                onClick={onOverlayClicked}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+              ></Overlay>
+              <BigMovie
+                style={{ top: scrollY.get() - 1100 }}
+                layoutId={bigModalmatch?.params.id}
               >
-                {data?.results
-                  .slice(offSet * index, offSet * index + offSet)
-                  .map((d) => (
-                    <Box
-                      layoutId={d.id + ""+listType}
-                      key={d.id}
-                      whileHover="hover"
-                      initial="normal"
-                      onClick={() => onBoxClicked(menuName, listType, d.id)}
-                      transition={{ type: "tween" }}
-                      variants={boxVariants}
-                      $bgPhoto={makeImagePath(d.backdrop_path, "w500")}
-                    >
-                      <Info variants={infoVariants}>
-                        <h4>{d.title}</h4>
-                      </Info>
-                    </Box>
-                  ))}
-              </Row>
-            </AnimatePresence>
-          </Slider>
-          </>
+                {clickedMovie && (
+                  <>
+                    <BigCover
+                      style={{
+                        backgroundImage: `linear-gradient(to top,black, transparent), 
+                          url(${makeImagePath(
+                            clickedMovie.backdrop_path,
+                            "w500"
+                          )})`,
+                      }}
+                    />
+                    <BigTitle>{clickedMovie.title}</BigTitle>
+                    <BigOverView>{clickedMovie.overview}</BigOverView>
+                    <BigInfoBox>
+                      <BigInfoTitle>평점</BigInfoTitle>
+                      <BigRating rating={clickedMovie.vote_average}>
+                        {clickedMovie.vote_average}
+                      </BigRating>
+                    </BigInfoBox>
+                  </>
+                )}
+              </BigMovie>
+            </>
+          ) : null}
+        </AnimatePresence>
+      </Slider>
+    </>
   );
 }

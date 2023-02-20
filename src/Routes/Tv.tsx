@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
@@ -6,6 +7,7 @@ import {
   getPopTvShows,
   getTopTvShows,
   IGetMoviesResult,
+  TYPE_VIDEO,
 } from "../api";
 import { BannerSize } from "../atoms";
 import Slide from "../Components/Slide";
@@ -14,12 +16,14 @@ import { makeImagePath } from "../utils";
 const Wrapper = styled.div`
   background: #000;
 `;
+
 const Loader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   height: 20vh;
 `;
+
 const Title = styled.h2`
   font-size: 68px;
   margin-bottom: 20px;
@@ -81,9 +85,27 @@ function Tv() {
             <OverView>{tvPop?.results[0].overview}</OverView>
           </Banner>
 
-          {/* <Slide data={tvAiring as IGetMoviesResult} title={"On the Air"} menuName={"tv"} videoType={"tv"} /> */}
-          {/* <Slide data={tvTop as IGetMoviesResult} title={"High Rated"} menuName={"tv"} videoType={"tv"}/> */}
-          {/* <Slide data={tvPop as IGetMoviesResult} title={"Popular"} menuName={"tv"} videoType={"tv"}/> */}
+          <Slide
+            data={tvAiring as IGetMoviesResult}
+            title={"On the Air"}
+            menuName={"tv"}
+            videoType={"tv"}
+            listType={TYPE_VIDEO[3]}
+          />
+          <Slide
+            data={tvTop as IGetMoviesResult}
+            title={"High Rated"}
+            menuName={"tv"}
+            videoType={"tv"}
+            listType={TYPE_VIDEO[4]}
+          />
+          <Slide
+            data={tvPop as IGetMoviesResult}
+            title={"Popular"}
+            menuName={"tv"}
+            videoType={"tv"}
+            listType={TYPE_VIDEO[5]}
+          />
         </>
       )}
     </Wrapper>

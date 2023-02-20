@@ -1,0 +1,10 @@
+{
+  "files": {
+    "main.js": "/HoonFlix/static/js/main.c8bacf53.js",
+    "index.html": "/HoonFlix/index.html",
+    "main.c8bacf53.js.map": "/HoonFlix/static/js/main.c8bacf53.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.c8bacf53.js"
+  ]
+}
