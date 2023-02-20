@@ -36,78 +36,7 @@ const OverView = styled.p`
   width: 50%;
 `;
 
-const Slider = styled(motion.div)`
-  position: relative;
-  top: -100px;
-`;
-const Row = styled(motion.div)`
-  display: grid;
-  gap: 5px;
-  grid-template-columns: repeat(6, 1fr);
-  position: absolute;
-  width: 100%;
-`;
-const Box = styled(motion.div)<{ $bgPhoto: string }>`
-  background-color: white;
-  background-image: url(${(props) => props.$bgPhoto});
-  background-size: cover;
-  background-position: center center;
-  height: 200px;
-  font-size: 66px;
-  cursor: pointer;
-  &:first-child {
-    transform-origin: center left;
-  }
-  &:last-child {
-    transform-origin: center right;
-  }
-`;
-const rowVariants = {
-  hidden: { x: window.innerWidth + 5 },
-  visible: { x: 0 },
-  exit: { x: -window.innerWidth - 5 },
-};
-
 const offSet = 6;
-
-const boxVariants = {
-  normal: {
-    scale: 1,
-  },
-  hover: {
-    scale: 1.3,
-    y: -50,
-    transition: {
-      delay: 0.5,
-      duration: 0.3,
-      type: "tween",
-    },
-  },
-};
-
-const Info = styled(motion.div)`
-  background-color: ${(props) => props.theme.black.lighter};
-  padding: 10px;
-  opacity: 0;
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  h4 {
-    text-align: center;
-    font-size: 18px;
-  }
-`;
-
-const infoVariants = {
-  hover: {
-    opacity: 1,
-    transition: {
-      delay: 0.5,
-      duration: 0.3,
-      type: "tween",
-    },
-  },
-};
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -186,9 +115,7 @@ function Home() {
   const toggleLeaving = () => {
     setLeaving((prev) => !prev);
   };
-  const onBoxClicked = (movieId: number) => {
-    history.push(`/movies/${movieId}`);
-  };
+ 
   const onOverlayClicked = () => history.push(`/`);
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
@@ -212,14 +139,23 @@ function Home() {
           <Slide
             data={data as IGetMoviesResult}
             title={"NOW_PLAYING_MOVIE"}
+            menuName={"Home"}
+            videoType={"movie"}
+            listType={TYPE_VIDEO[0]}
           />
           <Slide
             data={topMovie as IGetMoviesResult}
             title={"TOP_RATED_MOVIE"}
+            menuName={"Home"}
+            videoType={"movie"}
+            listType={TYPE_VIDEO[1]}
           />
           <Slide
             data={upComingMovie as IGetMoviesResult}
             title={"UPCOMING_MOVIE"}
+            menuName={"Home"}
+            videoType={"movie"}
+            listType={TYPE_VIDEO[2]}
           />
 
           <AnimatePresence>

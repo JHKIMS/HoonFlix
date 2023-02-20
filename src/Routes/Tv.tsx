@@ -81,9 +81,9 @@ function Tv() {
             <OverView>{tvPop?.results[0].overview}</OverView>
           </Banner>
 
-          <Slide data={tvAiring as IGetMoviesResult} title={"On the Air"} />
-          <Slide data={tvTop as IGetMoviesResult} title={"High Rated"} />
-          <Slide data={tvPop as IGetMoviesResult} title={"Popular"} />
+          {/* <Slide data={tvAiring as IGetMoviesResult} title={"On the Air"} menuName={"tv"} videoType={"tv"} /> */}
+          {/* <Slide data={tvTop as IGetMoviesResult} title={"High Rated"} menuName={"tv"} videoType={"tv"}/> */}
+          {/* <Slide data={tvPop as IGetMoviesResult} title={"Popular"} menuName={"tv"} videoType={"tv"}/> */}
         </>
       )}
     </Wrapper>

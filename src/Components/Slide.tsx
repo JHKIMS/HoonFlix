@@ -11,6 +11,9 @@ import { makeImagePath } from "../utils";
 interface ISlider {
   data: IGetMoviesResult;
   title: string;
+  menuName: string;
+  videoType: string;
+  listType: string;
 }
 
 
@@ -143,7 +146,7 @@ const rowVariants = {
   },
 };
 
-export default function Slide({data, title}:ISlider){
+export default function Slide({data, title ,menuName, videoType, listType}:ISlider){
 
   const history = useHistory();
   const [index, setIndex] = useState(0);
@@ -168,9 +171,8 @@ export default function Slide({data, title}:ISlider){
     setLeaving(value);
     setDragMode(value);
   };
-  const onBoxClicked = (movieId: number) => {
-     history.push(`/movies/${movieId}`);
-     
+  const onBoxClicked = (menu: string, type: string, id: number) => {
+    history.push(`/${menu}/${type}/${id}`);
   };
 
   
@@ -214,19 +216,19 @@ export default function Slide({data, title}:ISlider){
               >
                 {data?.results
                   .slice(offSet * index, offSet * index + offSet)
-                  .map((movie) => (
+                  .map((d) => (
                     <Box
-                      layoutId={movie.id + ""}
-                      key={movie.id}
+                      layoutId={d.id + ""+listType}
+                      key={d.id}
                       whileHover="hover"
                       initial="normal"
-                      onClick={() => onBoxClicked(movie.id)}
+                      onClick={() => onBoxClicked(menuName, listType, d.id)}
                       transition={{ type: "tween" }}
                       variants={boxVariants}
-                      $bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                      $bgPhoto={makeImagePath(d.backdrop_path, "w500")}
                     >
                       <Info variants={infoVariants}>
-                        <h4>{movie.title}</h4>
+                        <h4>{d.title}</h4>
                       </Info>
                     </Box>
                   ))}
