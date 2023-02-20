@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/HoonFlix/static/js/main.83b9021a.js",
+    "main.js": "/HoonFlix/static/js/main.a5c239cb.js",
     "index.html": "/HoonFlix/index.html",
-    "main.83b9021a.js.map": "/HoonFlix/static/js/main.83b9021a.js.map"
+    "main.a5c239cb.js.map": "/HoonFlix/static/js/main.a5c239cb.js.map"
   },
   "entrypoints": [
-    "static/js/main.83b9021a.js"
+    "static/js/main.a5c239cb.js"
   ]
 }
