@@ -1,5 +1,5 @@
 import { AnimatePresence, motion, useScroll } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
